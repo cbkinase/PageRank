@@ -148,7 +148,9 @@ Stop when
 
 $$|r^{(t+1)} - r^{(t)}|_1 < \epsilon$$
 
-Where $|x|_1 = \Sigma_{1 \le i \le N} |x_i|$ is the $\boldsymbol{L_1}$ norm. Can use any other vector norm: e.g., Euclidean.
+Where
+$$ |x|_1 = \Sigma_{1 \le i \le N} |x_i| $$
+is the $\boldsymbol{L_1}$ norm. Can use any other vector norm: e.g., Euclidean.
 
 
 Equivalently, this may be written as
