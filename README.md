@@ -67,7 +67,7 @@ The importance of page $j$ therefore is
 
 $$ r_j = \frac{r_i}{3} + \frac{r_k}{4} $$
 
-Furthermore, given that page $j$ has 3 out-links, each out-link will vote with a weight of $j / 3$.
+Furthermore, given that page $j$ has 3 out-links, each out-link will vote with a weight of $r_j / 3$.
 
 More generally, we can define the "rank" $r_j$ for a page $j$ by saying that
 
