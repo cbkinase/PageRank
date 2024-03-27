@@ -84,7 +84,9 @@ This gives us a series of "flow" equations. Let's explore this in the following 
 The resulting flow equations from this are
 
 $$ r_y = \frac{r_y}{2} + \frac{r_a}{2} $$
+
 $$ r_a = \frac{r_y}{2} + r_m $$
+
 $$ r_m = \frac{r_a}{2} $$
 
 However, we see there is no unique solution to this system of equations.
