@@ -169,7 +169,7 @@ But how can we prove that is relevant for our graph and that it will converge?
 We treat PageRank scores as the probability distribution of a random walker in a graph.
 - At any time $t$, a web surfer is on some page $i$
 - At time $t + 1$, the surfer follows an out-link from $i$ at random with uniform probability
-- Surfer ends up on some page$j$ linked from $i$
+- Surfer ends up on some page $j$ linked from $i$
 - Process repeats indefinitely
 
 
