@@ -194,7 +194,7 @@ $$p(t + 1) = M \cdot p(t) = p(t)$$
 
 Then $p(t)$ is a stationary distribution of a random walk.
 
-Notice that this is essentially the same formulation as our matrix interpretation &mdash; our original rank vector $r$ sastisfies $r = M \cdot r$.
+Notice that this is essentially the same formulation as our matrix interpretation &mdash; our original rank vector $r$ satisfies $r = M \cdot r$.
 
 $r$ is therefore a stationary distribution for the random walk.
 
@@ -210,7 +210,7 @@ However, there are three key questions we must ask ourselves about these equatio
 - Does it converge to what we want?
 - Are the results reasonable?
 
-Let's explore why some key faults of our current formulation of PageRank:
+Let's explore some key faults in our current formulation of PageRank:
 1) Some pages have no out-links (<b>dead-ends</b>) and <b>cause importance to be leaked out</b>
 2) If out-links from web pages form a small group, a random walker can get trapped in a small part of the graph
    - These <b>spider traps</b> can occur when all out-links are within a group. Eventually, they <b>will absorb all of the importance</b>
@@ -246,7 +246,7 @@ In this case, the solution is to <b>always</b> teleport to a random page when a 
 
 ![TODO: alt text](https://i.gyazo.com/270a219cc86c59c6a45033e226b7df30.png)
 
-Resulting in a a column stochastic matrix $M$
+Resulting in a column stochastic matrix $M$
 
 $$ M = \begin{bmatrix}
        ^1/_2 & ^1/_2 & ^1/_3 \\
@@ -344,7 +344,7 @@ Since $\Sigma r_j$ = 1, we can simplify further
 
 $$ r_i = \sum_{j=1}^{N} \beta M_{ij} \cdot r_j +  \frac{1 - \beta}{N} $$
 
-Rearranging into the the more explicit matrix formulation, we get
+Rearranging into the more explicit matrix formulation, we get
 
 $$ r = \beta M \cdot r + [\frac{1 - \beta}{N}]_N $$
 
@@ -405,9 +405,6 @@ This will yield a table of the form
 | 0           	| 3      	| 1, 5, 7               	|
 | 1           	| 5      	| 17, 64, 113, 117, 245 	|
 | 2           	| 2      	| 13, 23                	|
-
-
-For now, let us assume that although $M$ cannot fit into RAM, we at least have enough for
 
 For now, let us assume that we have enough RAM to fit $r^{new}$, although not enough for $M$ or $r^{old}$.
 
