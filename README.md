@@ -240,7 +240,7 @@ $$ M = \begin{bmatrix}
        0     & ^1/_2 & 0
      \end{bmatrix} $$
 
-But since node M is a dead end, the column for node $m$ no longer sums to 1. Our matrix is not column stochastic, and importance continually "leaks" out of $m$ until $r$ eventually reaches 0 for every page.
+But since node $m$ is a dead end, the column for $m$ no longer sums to 1. Our matrix is not column stochastic, and importance continually "leaks" out of $m$ until $r$ eventually reaches 0 for every page.
 
 In this case, the solution is to <b>always</b> teleport to a random page when a dead end is reached.
 
@@ -346,9 +346,9 @@ $$ r_i = \sum_{j=1}^{N} \beta M_{ij} \cdot r_j +  \frac{1 - \beta}{N} $$
 
 Rearranging into the more explicit matrix formulation, we get
 
-$$ r = \beta M \cdot r + [\frac{1 - \beta}{N}]_N $$
+$$ r = \beta M \cdot r + \left( \frac{1 - \beta}{N}\right)_N $$
 
-Where $[\frac{1 - \beta}{N}]_N$ denotes a vector of length $N$ with all entries $\frac{1 - \beta}{N}$
+Where $\left( \frac{1 - \beta}{N}\right)_N$ denotes a vector of length $N$ with all entries $\frac{1 - \beta}{N}$
 
 The benefit of this is that we never need to materialize the dense matrix $A$ &mdash; we can simply work with the sparse matrix $M$.
 
@@ -396,17 +396,91 @@ This algorithm is robust, regardless of spider traps or dead-ends. And we might 
 
 # Computing PageRank on Big Graphs
 
-We turn to a different encoding scheme for our sparse matrix using only nonzero entries: for every source node, we store its degree and a pointer to/identifier of the destination node.
+We turn to a different encoding scheme for our sparse matrix using only nonzero entries: for every source node, we store its degree and a list of pointers to destination nodes.
 
 This will yield a table of the form
 
 | Source node 	| Degree 	| Destination nodes     	|
 |-------------	|--------	|-----------------------	|
-| 0           	| 3      	| 1, 5, 7               	|
-| 1           	| 5      	| 17, 64, 113, 117, 245 	|
+| 0           	| 3      	| 1, 5, 6               	|
+| 1           	| 4      	| 17, 64, 113, 117 	        |
 | 2           	| 2      	| 13, 23                	|
 
-For now, let us assume that we have enough RAM to fit $r^{new}$, although not enough for $M$ or $r^{old}$.
+Notice it is rather similar to an adjacency list.
 
+## When $r^{new}$ fits into memory
 
-# Explanation & implementation to be continued...
+For now, for the sake of simplicity, let us assume that we have enough RAM to store $r^{new}$, although not enough for $M$ or $r^{old}$.
+
+On the first step of power iteration, we initialize all entries of $r^{new}$ to $(1 - \beta) / N$, where $N$ is the number of web pages.
+
+Then, for each page $p$, with a given out-degree $n$, we read into memory:
+- $p$
+- $n$
+- $[dest_1, dest_2, \dots, dest_n]$
+- $r^{old}(p)$
+
+Then, for $j = 1$ to $N$
+
+$$ r^{new}(dest_j) += \frac{\beta r^{old}(p)}{n}$$
+
+And this allows us to update $r^{new}$ simply by reading one row of $M$ and one entry of $r^{old}$.
+
+![TODO: alt text](https://i.gyazo.com/fa606af2528942e9ae7c38c70b068979.png)
+
+This assumes that we can fit $r^{new}$ entirely into memory, while storing $r^{old}$ and $M$ on disk. For each iteration, we must:
+- Read $r^{old}$ and $M$
+- Write $r^{new}$ back to disk
+- I/O cost: $2 |r| + |M|$
+
+Is there a more effective way to scale this that requires less I/O? Furthermore, what if we cannot store $r^{new}$ entirely in memory?
+
+## Block-based Update Algorithm
+
+- Take the vector $r$ and split it into $k$ blocks, each of which is capable of fitting into memory.
+- For each block $k_x$, scan through $M$ and $r^{old}$, updating $r^{new}(p)$ for all $p \in k_x$
+
+![TODO: alt text](https://i.gyazo.com/d1a0ac05377d2cdd14fe6e25ae808f06.png)
+
+It is fairly easy to see the inefficiency here: we need to scan the entire matrix, and $r^{old}$, for every block &mdash; similar to nested-loop join in databases.
+
+$k$ scans of $M$ and $r^{old}$ have the I/O cost
+
+$$ k(|M| + |r|) + |r| = k |M| + (k + 1) |r| $$
+
+So... can we do better? The crux here is that $M$ is much bigger (at least 10-30x) than $r$, so if we can avoid reading it $k$ times that would be preferable.
+
+The answer is yes, if we do some preprocessing to $M$.
+
+## Block-Stripe Update Algorithm
+
+- Like before, take the vector $r$ and split it into $k$ blocks, each of which is capable of fitting into memory.
+- Process $M$ into stripes such that each row for a source node $S$ will contain its out-degree, as well as <i>only</i> the destination nodes of $S$ that are in each $k$.
+  - That is, for every stripe of $M$, we only store the destination edges that have destinations in the corresponding block $k_x$.
+
+![TODO: alt text](https://i.gyazo.com/47d629e27afcf722b06459bd975d1e42.png)
+
+The benefit now is that for every $k$, we merely need to scan over a stripe of the preprocessed $M$, rather than the entire matrix on every iteration. There is some additional overhead involved with stripes, but it is usually worth it.
+
+I/O cost:
+
+$$  = |M| (1 + \epsilon) + (k + 1) |r| $$
+
+Where $\epsilon$ reflects the fact that there is some additional constant overhead involved due to the stripes.
+
+This completes our theoretical treatment of PageRank.
+
+# Limitations and Alternatives
+
+We have seen how to compute PageRank for arbitrary graphs. But now let's consider some problems with it, and some alternative link analysis methods:
+
+### It only measures generic popularity of a page
+- Instead of generic popularity, can we measure popularity within a topic?
+- This can also allow search queries to be tailored to user interests
+  - Query for "Trojan" wants different pages depending on whether you are interested in history, sports, or computer security
+- Solution: Topic-Specific PageRank
+### It uses a single measure of importance
+- Solution: Hubs-and-Authorities
+### Susceptible to link spam
+- Creating artificial link topographies to boost PageRank
+- Solution: TrustRank
