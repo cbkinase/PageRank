@@ -388,7 +388,7 @@ $$ t = t + 1 $$
 
 Repeat until
 
-$$ \Sigma_j | r_j^{(t)} - r_j^{(t - 1)} | > \epsilon  $$
+$$ \Sigma_j | r_j^{(t)} - r_j^{(t - 1)} | < \epsilon  $$
 
 Where $\epsilon$ is some small number of our choosing.
 
