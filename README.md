@@ -1,4 +1,29 @@
-# PageRank
+# Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
+- [Model](#model)
+- [The Flow Formulation](#the-flow-formulation)
+  - [Example 1](#example-1)
+  - [Example 2](#example-2)
+- [The Matrix Formulation](#the-matrix-formulation)
+- [Power Iteration and the Random Walk Interpretation](#power-iteration-and-the-random-walk-interpretation)
+  - [The Random Walk Interpretation](#the-random-walk-interpretation)
+    - [The Stationary Distribution](#the-stationary-distribution)
+- [Issues, and the Google Formulation](#issues-and-the-google-formulation)
+    - [The Google Solution: Random Teleports](#the-google-solution-random-teleports)
+      - [Why Teleports Solve the Problem](#why-teleports-solve-the-problem)
+- [How we Really Compute PageRank](#how-we-really-compute-pagerank)
+  - [The Sparse Matrix Formulation](#the-sparse-matrix-formulation)
+  - [PageRank: the Complete Algorithm](#pagerank-the-complete-algorithm)
+- [Computing PageRank on Big Graphs](#computing-pagerank-on-big-graphs)
+  - [When $r^{new}$ fits into memory](#when-rnew-fits-into-memory)
+  - [Block-Based Update Algorithm](#block-based-update-algorithm)
+  - [Block-Stripe Update Algorithm](#block-stripe-update-algorithm)
+- [Limitations and Alternatives](#limitations-and-alternatives)
+
+
+# Introduction
 
 Early attempts to organize the web relied on human curation/categorization.
 However, the web grew far too quickly for this to remain effective.
@@ -435,7 +460,7 @@ This assumes that we can fit $r^{new}$ entirely into memory, while storing $r^{o
 
 Is there a more effective way to scale this that requires less I/O? Furthermore, what if we cannot store $r^{new}$ entirely in memory?
 
-## Block-based Update Algorithm
+## Block-Based Update Algorithm
 
 - Take the vector $r$ and split it into $k$ blocks, each of which is capable of fitting into memory.
 - For each block $k_x$, scan through $M$ and $r^{old}$, updating $r^{new}(p)$ for all $p \in k_x$
@@ -474,13 +499,18 @@ This completes our theoretical treatment of PageRank.
 
 We have seen how to compute PageRank for arbitrary graphs. But now let's consider some problems with it, and some alternative link analysis methods:
 
-### It only measures generic popularity of a page
+<b> It only measures generic popularity of a page </b>
+
 - Instead of generic popularity, can we measure popularity within a topic?
 - This can also allow search queries to be tailored to user interests
   - Query for "Trojan" wants different pages depending on whether you are interested in history, sports, or computer security
 - Solution: Topic-Specific PageRank
-### It uses a single measure of importance
+
+<b> It uses a single measure of importance </b>
+
 - Solution: Hubs-and-Authorities
-### Susceptible to link spam
+
+<b> It is susceptible to link spam </b>
+
 - Creating artificial link topographies to boost PageRank
 - Solution: TrustRank
