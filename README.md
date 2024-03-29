@@ -17,7 +17,7 @@
   - [The Sparse Matrix Formulation](#the-sparse-matrix-formulation)
   - [PageRank: the Complete Algorithm](#pagerank-the-complete-algorithm)
 - [Computing PageRank on Big Graphs](#computing-pagerank-on-big-graphs)
-  - [When $r^{new}$ fits into memory](#when-rnew-fits-into-memory)
+  - [When One Vector Fits Into Memory](#when-one-vector-fits-into-memory)
   - [Block-Based Update Algorithm](#block-based-update-algorithm)
   - [Block-Stripe Update Algorithm](#block-stripe-update-algorithm)
 - [Limitations and Alternatives](#limitations-and-alternatives)
@@ -433,7 +433,7 @@ This will yield a table of the form
 
 Notice it is rather similar to an adjacency list.
 
-## When $r^{new}$ fits into memory
+## When One Vector Fits Into Memory
 
 For now, for the sake of simplicity, let us assume that we have enough RAM to store $r^{new}$, although not enough for $M$ or $r^{old}$.
 
