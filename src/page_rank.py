@@ -19,9 +19,9 @@ def naive_pagerank(M: List[Row], beta=0.80, epsilon=0.00001):
     """
     N = len(M)
     r = [1/N] * N
-    has_coverged = False
+    has_converged = False
 
-    while not has_coverged:
+    while not has_converged:
         r_old = r.copy()
         for r_idx in range(len(r)):
             current_page = M[r_idx].src
@@ -48,7 +48,7 @@ def naive_pagerank(M: List[Row], beta=0.80, epsilon=0.00001):
 
         distance_vector = [x - y for x, y in zip(r, r_old)]
         if l1_norm(distance_vector) < epsilon:
-            has_coverged = True
+            has_converged = True
 
     return r
 
