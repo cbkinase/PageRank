@@ -151,6 +151,8 @@ Note: $\boldsymbol{x}$ is an eigenvector with the corresponding eigenvalue $\bol
 
 $$ \boldsymbol{A} \boldsymbol{x} = \boldsymbol{\lambda} \boldsymbol{x}  $$
 
+That is to say, an eigenvector $\boldsymbol{x}$ is a "special" vector that, when multiplied by a matrix $\boldsymbol{A}$
+
 And so we see that this is essentially an eigenvalue problem
 - The rank vector $r$ is an eigenvector of the web matrix $M$
 - Furthermore, it is its principal eigenvector, with corresponding eigenvalue of 1
@@ -164,7 +166,7 @@ Suppose there are $N$ web pages
 
 First, initialize
 
-$$ r^{(0)} = [\frac{1}{N}, \ldots,  \frac{1}{N}]^T $$
+$$ r^{(0)} = \left[\frac{1}{N}, \ldots,  \frac{1}{N}\right]^T $$
 
 Then, iterate
 
@@ -359,9 +361,9 @@ $$ r_i = \sum_{j=1}^{N} A_{ij} \cdot r_j $$
 
 Substituting the value for $A_{ij}$ from above, we get
 
-$$ r_i = \sum_{j=1}^{N} \space [\beta M_{ij} + \frac{1 - \beta}{N}] \cdot r_j $$
+$$ r_i = \sum_{j=1}^{N} \space \left( \beta M_{ij} + \frac{1 - \beta}{N}\right) \cdot r_j $$
 
-Applying the distributive property to the summation
+Applying the distributive property
 
 $$ r_i = \sum_{j=1}^{N} \beta M_{ij} \cdot r_j +  \sum_{j=1}^{N}  \frac{1 - \beta}{N} \cdot r_j $$
 
@@ -371,9 +373,9 @@ $$ r_i = \sum_{j=1}^{N} \beta M_{ij} \cdot r_j +  \frac{1 - \beta}{N} $$
 
 Rearranging into the more explicit matrix formulation, we get
 
-$$ r = \beta M \cdot r + \left( \frac{1 - \beta}{N}\right)_N $$
+$$ r = \beta M \cdot r + \left[ \frac{1 - \beta}{N}\right]_N $$
 
-Where $\left( \frac{1 - \beta}{N}\right)_N$ denotes a vector of length $N$ with all entries $\frac{1 - \beta}{N}$
+Where $\left[ \frac{1 - \beta}{N}\right]_N$ denotes a vector of length $N$ with all entries $\frac{1 - \beta}{N}$
 
 The benefit of this is that we never need to materialize the dense matrix $A$ &mdash; we can simply work with the sparse matrix $M$.
 
@@ -428,7 +430,7 @@ This will yield a table of the form
 | Source node 	| Degree 	| Destination nodes     	|
 |-------------	|--------	|-----------------------	|
 | 0           	| 3      	| 1, 5, 6               	|
-| 1           	| 4      	| 17, 64, 113, 117 	        |
+| 1           	| 4      	| 17, 64, 113, 117 	      |
 | 2           	| 2      	| 13, 23                	|
 
 Notice it is rather similar to an adjacency list.
