@@ -151,8 +151,6 @@ Note: $\boldsymbol{x}$ is an eigenvector with the corresponding eigenvalue $\bol
 
 $$ \boldsymbol{A} \boldsymbol{x} = \boldsymbol{\lambda} \boldsymbol{x}  $$
 
-That is to say, an eigenvector $\boldsymbol{x}$ is a "special" vector that, when multiplied by a matrix $\boldsymbol{A}$
-
 And so we see that this is essentially an eigenvalue problem
 - The rank vector $r$ is an eigenvector of the web matrix $M$
 - Furthermore, it is its principal eigenvector, with corresponding eigenvalue of 1
